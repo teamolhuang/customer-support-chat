@@ -132,5 +132,8 @@
       }
     }
   },
-  "defaultProject": "src"
+  "defaultProject": "src",
+  "cli": {
+    "analytics": false
+  }
 }
