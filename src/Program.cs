@@ -1,8 +1,25 @@
+
+
+using System.Reflection;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using src.Handlers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
+builder.Services.AddMediatR(c => Assembly.GetAssembly(typeof(IRequest)));
+builder.Services.AddScoped<SendCustomerMessageCommandDbHandler>();
+
+// 在子目錄 db 底下建立 db file
+Directory.CreateDirectory("db");
+
+builder.Services.AddDbContext<DatabaseContext>(options =>
+{
+    options.UseSqlite($"Data Source=./db/database.db");
+});
 
 var app = builder.Build();
 
