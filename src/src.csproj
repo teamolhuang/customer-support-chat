@@ -15,6 +15,7 @@
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.32" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.36" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.36" />
+    <PackageReference Include="StackExchange.Redis" Version="2.8.24" />
   </ItemGroup>
 
   <ItemGroup>

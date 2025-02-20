@@ -8,11 +8,11 @@ namespace tests.HandlerTests
 {
     [TestFixture]
     [Description("針對 SendCustomerMessageCommandDbHandler 的一系列測試方法。")]
-    public class SendMessageTests
+    public class SendCustomerMessageCommandDbHandlerTests
     {
         [Test]
         [Description("驗證 Handler 應接受包含訊息內容的 SendCustomerMessageCommand 物件，並把這筆留言寫進 DB。")]
-        public async Task SendMessageAsync_ShouldAcceptSendCustomerMessageCommand_AndInsertMessageInDatabase(){
+        public async Task Handle_ShouldAcceptSendCustomerMessageCommand_AndInsertMessageInDatabase(){
             
             // Arrange
             SendCustomerMessageCommand command = new() {
@@ -45,6 +45,5 @@ namespace tests.HandlerTests
 
             autoMocker.Verify();
         }
-
     }
 }

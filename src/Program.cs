@@ -3,6 +3,8 @@
 using System.Reflection;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using src.Contexts.Redis;
+using src.Contexts.Redis.Abstracts;
 using src.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddMediatR(c => Assembly.GetAssembly(typeof(IRequest)));
 builder.Services.AddScoped<SendCustomerMessageCommandDbHandler>();
+builder.Services.AddScoped<SendCustomerMessageCommandRedisHandler>();
+
+builder.Services.AddScoped<IRedisContext, RedisContext>();
 
 // 在子目錄 db 底下建立 db file
 Directory.CreateDirectory("db");
@@ -20,6 +25,7 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 {
     options.UseSqlite($"Data Source=./db/database.db");
 });
+
 
 var app = builder.Build();
 
