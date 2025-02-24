@@ -4,7 +4,7 @@ using src.Commands;
 using src.Contexts.Database.Entities;
 using src.Handlers;
 
-namespace tests.HandlerTests
+namespace tests.HandlerTests.SendCustomerMessage
 {
     [TestFixture]
     [Description("針對 SendCustomerMessageCommandDbHandler 的一系列測試方法。")]

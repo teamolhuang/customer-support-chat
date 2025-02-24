@@ -4,9 +4,8 @@ using src.Commands;
 using src.Contexts.Redis.Abstracts;
 using src.Contexts.Redis.Entities;
 using src.Handlers;
-using StackExchange.Redis;
 
-namespace tests.HandlerTests;
+namespace tests.HandlerTests.SendCustomerMessage;
 
 [TestFixture]
 [Description("針對 SendCustomerMessageCommandDbHandler 的一系列測試方法。")]
