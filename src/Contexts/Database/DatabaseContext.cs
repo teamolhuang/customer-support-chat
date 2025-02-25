@@ -25,4 +25,9 @@ public class DatabaseContext : DbContext {
     /// 聊天訊息表
     /// </summary>
     public virtual DbSet<ChatMessage> ChatMessages { get; set; }
+    
+    /// <summary>
+    /// 使用者帳號表
+    /// </summary>
+    public virtual DbSet<Account> Accounts { get; set; }
 }

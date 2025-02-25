@@ -18,6 +18,7 @@ builder.Services.AddMediatR(configuration =>
 
 builder.Services.AddScoped<SendCustomerMessageCommandDbHandler>();
 builder.Services.AddScoped<SendCustomerMessageCommandRedisHandler>();
+builder.Services.AddScoped<RegisterCommandDbHandler>();
 
 builder.Services.AddScoped<IRedisContext, RedisContext>();
 
