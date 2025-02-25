@@ -5,11 +5,11 @@ using src.Contexts.Redis.Abstracts;
 using src.Contexts.Redis.Entities;
 using src.Handlers;
 
-namespace tests.HandlerTests.SendCustomerMessage;
+namespace tests.HandlerTests.SendCustomerMessageTests;
 
 [TestFixture]
 [Description("針對 SendCustomerMessageCommandDbHandler 的一系列測試方法。")]
-public class SendCustomerMessageCommandRedisHandlerTests
+public class RedisHandlerTests
 {
     [Test]
     [Description("驗證 Handler 應接受包含訊息內容的 SendCustomerMessageCommand 物件，並把這筆留言寫進 Redis。")]

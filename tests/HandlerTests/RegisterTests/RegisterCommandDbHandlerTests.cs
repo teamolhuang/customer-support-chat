@@ -1,5 +1,4 @@
 ﻿using System.Data;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using Moq.AutoMock;
 using Moq.EntityFrameworkCore;
@@ -7,7 +6,7 @@ using src.Commands;
 using src.Contexts.Database.Entities;
 using src.Handlers;
 
-namespace tests.HandlerTests.Register;
+namespace tests.HandlerTests.RegisterTests;
 
 [TestFixture]
 [Description("針對註冊功能寫進 DB 的一系列測試方法。")]

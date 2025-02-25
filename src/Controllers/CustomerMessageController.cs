@@ -27,7 +27,7 @@ public class CustomerMessageController : ControllerBase
     /// 前台使用者發送訊息。
     /// </summary>
     [HttpPost]
-    [AllowAnonymous] // TODO: 授權模組
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> SendMessageAsync([FromBody] SendCustomerMessageRequest request)
     {

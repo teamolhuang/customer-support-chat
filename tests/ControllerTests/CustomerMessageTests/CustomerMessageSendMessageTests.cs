@@ -6,7 +6,7 @@ using src.Commands;
 using src.Contracts.Requests.CustomerMessage;
 using src.Controllers;
 
-namespace tests.ControllerTests.CustomerMessage;
+namespace tests.ControllerTests.CustomerMessageTests;
 
 [TestFixture]
 [Description("針對 CustomerMessageController 中傳送訊息方法的一系列測試。")]

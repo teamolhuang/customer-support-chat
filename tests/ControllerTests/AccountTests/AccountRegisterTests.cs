@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Moq.AutoMock;
@@ -7,11 +6,11 @@ using src.Commands;
 using src.Controllers;
 using RegisterRequest = src.Contracts.Requests.Register.RegisterRequest;
 
-namespace tests.ControllerTests.Account;
+namespace tests.ControllerTests.AccountTests;
 
 [TestFixture]
 [Description("針對 AccountController 中註冊端點的一系列測試方法。")]
-public class AccountControllerRegisterTests
+public class AccountRegisterTests
 {
     [Test]
     [Description("驗證 RegisterAsync 方法應該接受指定的傳入物件並傳進 Mediator，再回傳包含相關資訊的 201。")]

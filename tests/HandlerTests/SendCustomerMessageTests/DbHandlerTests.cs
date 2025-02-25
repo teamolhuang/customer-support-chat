@@ -4,11 +4,11 @@ using src.Commands;
 using src.Contexts.Database.Entities;
 using src.Handlers;
 
-namespace tests.HandlerTests.SendCustomerMessage
+namespace tests.HandlerTests.SendCustomerMessageTests
 {
     [TestFixture]
     [Description("針對 SendCustomerMessageCommandDbHandler 的一系列測試方法。")]
-    public class SendCustomerMessageCommandDbHandlerTests
+    public class DbHandlerTests
     {
         [Test]
         [Description("驗證 Handler 應接受包含訊息內容的 SendCustomerMessageCommand 物件，並把這筆留言寫進 DB。")]
