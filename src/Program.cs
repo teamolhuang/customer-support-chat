@@ -6,6 +6,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using src.Contexts.Redis;
 using src.Contexts.Redis.Abstracts;
+using src.Contexts.SharedContexts;
+using src.Contexts.SharedContexts.Abstracts;
 using src.Controllers;
 using src.Handlers;
 using src.Utilities;
@@ -38,8 +40,9 @@ builder.Services.AddScoped<IJwtHelper, JwtHelper>();
     
 #endregion
 
-#region Databases
+#region Contexts
 
+builder.Services.AddScoped<ISharedAuthorizedContext, SharedAuthorizedContext>();
 builder.Services.AddScoped<IRedisContext, RedisContext>();
 
 // 在子目錄 db 底下建立 db file
@@ -96,14 +99,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             OnTokenValidated = async context =>
             {
-                bool isNotDeleted = await context
+                IJwtHelper jwtHelper = context
                     .HttpContext
                     .RequestServices
-                    .GetRequiredService<IJwtHelper>()
-                    .ValidateUserIdInClaimAsync(context);
+                    .GetRequiredService<IJwtHelper>();
+                
+                bool isNotDeleted = await jwtHelper.ValidateUserIdInClaimAsync(context);
                         
                 if (!isNotDeleted)
                     context.Fail("請重新登入");
+
+                await jwtHelper.WriteClaimsInSharedContextAsync(context);
             }
         };
     });

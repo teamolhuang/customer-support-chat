@@ -2,6 +2,7 @@ using Moq;
 using Moq.AutoMock;
 using src.Commands;
 using src.Contexts.Database.Entities;
+using src.Contexts.SharedContexts.Abstracts;
 using src.Handlers;
 
 namespace tests.HandlerTests.SendCustomerMessageTests
@@ -11,10 +12,12 @@ namespace tests.HandlerTests.SendCustomerMessageTests
     public class DbHandlerTests
     {
         [Test]
-        [Description("驗證 Handler 應接受包含訊息內容的 SendCustomerMessageCommand 物件，並把這筆留言寫進 DB。")]
+        [Description("驗證 Handler 應接受包含訊息內容的 SendCustomerMessageCommand 物件，並把這筆留言連同使用者 ID 寫進 DB。")]
         public async Task Handle_ShouldAcceptSendCustomerMessageCommand_AndInsertMessageInDatabase(){
             
             // Arrange
+            int mockAccountId = new Random().Next();
+            
             SendCustomerMessageCommand command = new() {
                 Message = Guid.NewGuid().ToString(),
                 CreatedTime = DateTime.Now
@@ -33,6 +36,11 @@ namespace tests.HandlerTests.SendCustomerMessageTests
             AutoMocker autoMocker = new();            
             autoMocker.Use(mockContext);
 
+            autoMocker.GetMock<ISharedAuthorizedContext>()
+                .SetupGet(ctx => ctx.AccountId)
+                .Returns(mockAccountId)
+                .Verifiable(Times.Once);
+            
             SendCustomerMessageCommandDbHandler instance = autoMocker.CreateInstance<SendCustomerMessageCommandDbHandler>();
 
             // Act
@@ -40,6 +48,7 @@ namespace tests.HandlerTests.SendCustomerMessageTests
 
             // Assert
             ChatMessage writtenEntity = captures.Single();
+            Assert.That(writtenEntity.AccountId, Is.EqualTo(mockAccountId));
             Assert.That(writtenEntity.Content, Is.EqualTo(command.Message));
             Assert.That(writtenEntity.CreatedTime, Is.GreaterThanOrEqualTo(command.CreatedTime));
 

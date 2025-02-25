@@ -2,6 +2,7 @@
 using src.Commands;
 using src.Contexts.Redis.Abstracts;
 using src.Contexts.Redis.Entities;
+using src.Contexts.SharedContexts.Abstracts;
 
 namespace src.Handlers;
 
@@ -10,13 +11,16 @@ namespace src.Handlers;
 /// </summary>
 public class SendCustomerMessageCommandRedisHandler : IRequestHandler<SendCustomerMessageCommand>
 {
+    private readonly ISharedAuthorizedContext _sharedAuthorizedContext;
     private IRedisContext RedisContext { get; }
 
     /// <summary>
     /// 一般使用者傳送訊息後，把訊息快取到 Redis
     /// </summary>
-    public SendCustomerMessageCommandRedisHandler(IRedisContext redisContext)
+    public SendCustomerMessageCommandRedisHandler(IRedisContext redisContext,
+        ISharedAuthorizedContext sharedAuthorizedContext)
     {
+        _sharedAuthorizedContext = sharedAuthorizedContext;
         RedisContext = redisContext;
     }
 
@@ -28,8 +32,10 @@ public class SendCustomerMessageCommandRedisHandler : IRequestHandler<SendCustom
             Content = request.Message,
             CreatedTime = request.CreatedTime
         };
-        
-        await RedisContext.AddToListAsync(IRedisContext.ChatMessageKey, newMessage);
-        await RedisContext.ExpireAsync(IRedisContext.ChatMessageKey, TimeSpan.FromDays(1));
+
+        int accountId = _sharedAuthorizedContext.AccountId;
+        string chatMessageSetKey = IRedisContext.GetChatMessageKey(accountId);
+        await RedisContext.AddToListAsync(chatMessageSetKey, newMessage);
+        await RedisContext.ExpireAsync(chatMessageSetKey, TimeSpan.FromDays(1));
     }
 }

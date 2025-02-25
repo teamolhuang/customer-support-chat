@@ -1,8 +1,7 @@
-
 using MediatR;
-using Microsoft.EntityFrameworkCore.Storage;
 using src.Commands;
 using src.Contexts.Database.Entities;
+using src.Contexts.SharedContexts.Abstracts;
 
 namespace src.Handlers
 {
@@ -11,16 +10,19 @@ namespace src.Handlers
     /// </summary>
     public class SendCustomerMessageCommandDbHandler : IRequestHandler<SendCustomerMessageCommand>
     {
-        private DatabaseContext _database { get; init; }
+        private readonly ISharedAuthorizedContext _sharedAuthorizedContext;
+        private DatabaseContext Database { get; init; }
 
         /// <summary>
         /// 取得實例
         /// </summary>
         public SendCustomerMessageCommandDbHandler(
-            DatabaseContext databaseContext
+            DatabaseContext databaseContext,
+            ISharedAuthorizedContext sharedAuthorizedContext
         )
         {
-            _database = databaseContext;
+            _sharedAuthorizedContext = sharedAuthorizedContext;
+            Database = databaseContext;
         }
 
         /// <inheritdoc />
@@ -29,11 +31,12 @@ namespace src.Handlers
             // 1. 把訊息寫入 CustomerMessage 表
             ChatMessage message = new() {
                 Content = command.Message,
-                CreatedTime = command.CreatedTime
+                CreatedTime = command.CreatedTime,
+                AccountId = _sharedAuthorizedContext.AccountId
             };
 
-            await _database.AddAsync(message);
-            await _database.SaveChangesAsync();
+            await Database.AddAsync(message, cancellationToken);
+            await Database.SaveChangesAsync(cancellationToken);
         }
     }
 }

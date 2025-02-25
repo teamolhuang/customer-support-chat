@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
@@ -28,5 +27,17 @@ namespace src.Contexts.Database.Entities
         /// 建立時間
         /// </summary>
         public DateTime CreatedTime { get; set; }
+
+        /// <summary>
+        /// 這筆資料對應的使用者帳號 ID。
+        /// </summary>
+        public int? AccountId { get; set; }
+        
+        /// <summary>
+        /// 與這筆資料關聯的使用者帳號。
+        /// </summary>
+        [ForeignKey(nameof(AccountId))]
+        public Account? Account { get; set; }
+        
     }
 }

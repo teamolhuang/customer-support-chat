@@ -3,6 +3,7 @@ using Moq.AutoMock;
 using src.Commands;
 using src.Contexts.Redis.Abstracts;
 using src.Contexts.Redis.Entities;
+using src.Contexts.SharedContexts.Abstracts;
 using src.Handlers;
 
 namespace tests.HandlerTests.SendCustomerMessageTests;
@@ -16,6 +17,8 @@ public class RedisHandlerTests
     public async Task Handle_ShouldAcceptSendCustomerMessageCommand_AndInsertMessageIntoRedis()
     {
         // Arrange
+        int mockAccountId = new Random().Next();
+        
         SendCustomerMessageCommand command = new()
         {
             Message = Guid.NewGuid().ToString(),
@@ -27,9 +30,14 @@ public class RedisHandlerTests
         
         Mock<IRedisContext> mockedRedis = autoMocker.GetMock<IRedisContext>();
         mockedRedis.Setup(redis =>
-            redis.AddToListAsync(IRedisContext.ChatMessageKey, Capture.In(captures)));
+            redis.AddToListAsync(IRedisContext.GetChatMessageKey(mockAccountId), Capture.In(captures)));
         mockedRedis.Setup(redis =>
-            redis.ExpireAsync(IRedisContext.ChatMessageKey, TimeSpan.FromDays(1)));
+            redis.ExpireAsync(IRedisContext.GetChatMessageKey(mockAccountId), TimeSpan.FromDays(1)));
+        
+        autoMocker.GetMock<ISharedAuthorizedContext>()
+            .SetupGet(ctx => ctx.AccountId)
+            .Returns(mockAccountId)
+            .Verifiable(Times.Once);
         
         SendCustomerMessageCommandRedisHandler handler = autoMocker.CreateInstance<SendCustomerMessageCommandRedisHandler>();
 

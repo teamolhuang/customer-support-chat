@@ -19,4 +19,9 @@ public interface IJwtHelper
     /// 驗證使用者 ID 存在於 JWT claims 裡面。
     /// </summary>
     Task<bool> ValidateUserIdInClaimAsync(TokenValidatedContext context);
+
+    /// <summary>
+    /// 將使用者 ID 寫在 SharedAuthorizedContext 中，以便各層類型取用。
+    /// </summary>
+    Task WriteClaimsInSharedContextAsync(TokenValidatedContext context);
 }

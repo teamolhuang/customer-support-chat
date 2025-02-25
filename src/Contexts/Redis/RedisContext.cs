@@ -23,15 +23,15 @@ public class RedisContext : IRedisContext
     private IDatabase Database => ConnectionMultiplexer.GetDatabase();
 
     /// <inheritdoc />
-    public async Task AddToListAsync<T>(string chatMessageKey, T input)
+    public async Task AddToListAsync<T>(string key, T input)
     {
         string serialization = JsonSerializer.Serialize(input);
-        await Database.ListRightPushAsync(chatMessageKey, serialization);
+        await Database.ListRightPushAsync(key, serialization);
     }
 
     /// <inheritdoc />
-    public async Task ExpireAsync(string chatMessageKey, TimeSpan timeSpan)
+    public async Task ExpireAsync(string key, TimeSpan timeSpan)
     {
-        await Database.KeyExpireAsync(chatMessageKey, timeSpan);
+        await Database.KeyExpireAsync(key, timeSpan);
     }
 }

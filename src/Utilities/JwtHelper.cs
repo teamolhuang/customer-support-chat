@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
+using src.Contexts.SharedContexts;
 using src.Contracts.Dtos;
 using src.Utilities.Abstracts;
 
@@ -13,13 +14,16 @@ namespace src.Utilities;
 public class JwtHelper : IJwtHelper
 {
     private readonly IOptions<AppSettings> _appSettings;
-    
+    private readonly SharedAuthorizedContext _sharedContext;
+
     /// <summary>
     /// 建立實例。
     /// </summary>
-    public JwtHelper(IOptions<AppSettings> appSettings)
+    public JwtHelper(IOptions<AppSettings> appSettings,
+        SharedAuthorizedContext sharedContext)
     {
         _appSettings = appSettings;
+        _sharedContext = sharedContext;
     }
 
     /// <inheritdoc />
@@ -62,5 +66,17 @@ public class JwtHelper : IJwtHelper
     public Task<bool> ValidateUserIdInClaimAsync(TokenValidatedContext context)
     {
         return Task.FromResult(context.Principal?.HasClaim(c => c.Type == ClaimTypes.Sid) ?? false);
+    }
+
+    /// <inheritdoc />
+    public Task WriteClaimsInSharedContextAsync(TokenValidatedContext context)
+    {
+        Claim? sid = context.Principal?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid);
+
+        if (sid is null || !int.TryParse(sid.Value, out int id))
+            return Task.CompletedTask;
+
+        _sharedContext.AccountId = id;
+        return Task.CompletedTask;
     }
 }
