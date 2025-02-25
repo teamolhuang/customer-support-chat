@@ -13,7 +13,7 @@ namespace tests.ControllerTests.CustomerMessageTests;
 public class CustomerMessageSendMessageTests
 {
     [Test]
-    [Description("驗證傳送訊息時，應該將要求物件轉換成 Command 後傳給 Mediator，並回傳 200。")]
+    [Description("驗證傳送訊息時，應該將要求物件轉換成 Command 後 Publish 給 Mediator，並回傳 200。")]
     public async Task SendMessageAsync_ShouldConvertRequestToCommandAndSendToMediator_AndReturnOkResult()
     {
         // Arrange
@@ -26,10 +26,10 @@ public class CustomerMessageSendMessageTests
             Message = Guid.NewGuid().ToString()
         };
 
-        ICollection<SendCustomerMessageCommand> captures = [];
+        ICollection<SendCustomerMessageNotification> captures = [];
         
         autoMocker.GetMock<IMediator>()
-            .Setup(m => m.Send(Capture.In(captures), It.IsAny<CancellationToken>()))
+            .Setup(m => m.Publish(Capture.In(captures), It.IsAny<CancellationToken>()))
             .Verifiable(Times.Once);
         
         CustomerMessageController controller = autoMocker.CreateInstance<CustomerMessageController>();
@@ -43,7 +43,7 @@ public class CustomerMessageSendMessageTests
         
         Assert.That(captures, Has.Count.EqualTo(1));
 
-        SendCustomerMessageCommand capture = captures.Single();
+        SendCustomerMessageNotification capture = captures.Single();
         
         Assert.That(capture.Message, Is.EqualTo(request.Message));
         Assert.That(capture.CreatedTime, Is.GreaterThanOrEqualTo(startTime));

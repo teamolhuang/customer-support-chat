@@ -31,14 +31,27 @@ public class CustomerMessageController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> SendMessageAsync([FromBody] SendCustomerMessageRequest request)
     {
-        SendCustomerMessageCommand command = new()
+        SendCustomerMessageNotification notification = new()
         {
             Message = request.Message,
             CreatedTime = DateTime.Now
         };
         
-        await Mediator.Send(command);
+        await Mediator.Publish(notification);
 
         return Ok();
+    }
+
+    /// <summary>
+    /// 取得訊息。
+    /// </summary>
+    [HttpGet]
+    [Authorize]
+    [ProducesResponseType(typeof(GetCustomerMessagesCommandResult), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetMessagesAsync()
+    {
+        GetCustomerMessagesCommandResult result = await Mediator.Send(new GetCustomerMessagesCommand());
+
+        return Ok(result);
     }
 }

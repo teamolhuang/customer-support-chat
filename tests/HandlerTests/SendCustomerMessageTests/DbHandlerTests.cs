@@ -8,17 +8,18 @@ using src.Handlers;
 namespace tests.HandlerTests.SendCustomerMessageTests
 {
     [TestFixture]
-    [Description("針對 SendCustomerMessageCommandDbHandler 的一系列測試方法。")]
+    [Description("針對 SendCustomerMessageNotificationDbHandler 的一系列測試方法。")]
     public class DbHandlerTests
     {
         [Test]
-        [Description("驗證 Handler 應接受包含訊息內容的 SendCustomerMessageCommand 物件，並把這筆留言連同使用者 ID 寫進 DB。")]
+        [Description("驗證 Handler 應接受包含訊息內容的 SendCustomerMessageNotification 物件，並把這筆留言連同使用者 ID 寫進 DB。")]
         public async Task Handle_ShouldAcceptSendCustomerMessageCommand_AndInsertMessageInDatabase(){
             
             // Arrange
-            int mockAccountId = new Random().Next();
+            Random random = new();
+            int mockAccountId = random.Next();
             
-            SendCustomerMessageCommand command = new() {
+            SendCustomerMessageNotification notification = new() {
                 Message = Guid.NewGuid().ToString(),
                 CreatedTime = DateTime.Now
             };
@@ -41,16 +42,17 @@ namespace tests.HandlerTests.SendCustomerMessageTests
                 .Returns(mockAccountId)
                 .Verifiable(Times.Once);
             
-            SendCustomerMessageCommandDbHandler instance = autoMocker.CreateInstance<SendCustomerMessageCommandDbHandler>();
+            SendCustomerMessageNotificationDbHandler instance = autoMocker.CreateInstance<SendCustomerMessageNotificationDbHandler>();
 
             // Act
-            await instance.Handle(command, default);
+            await instance.Handle(notification, default);
 
             // Assert
             ChatMessage writtenEntity = captures.Single();
             Assert.That(writtenEntity.AccountId, Is.EqualTo(mockAccountId));
-            Assert.That(writtenEntity.Content, Is.EqualTo(command.Message));
-            Assert.That(writtenEntity.CreatedTime, Is.GreaterThanOrEqualTo(command.CreatedTime));
+            Assert.That(writtenEntity.Content, Is.EqualTo(notification.Message));
+            Assert.That(writtenEntity.CreatedTime, Is.GreaterThanOrEqualTo(notification.CreatedTime));
+            Assert.That(writtenEntity.IsFromUser, Is.True); // 因為是客戶傳訊息的 Command，所以一定是 true。
 
             autoMocker.Verify();
         }

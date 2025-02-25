@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
-using src.Contexts.SharedContexts;
+using src.Contexts.SharedContexts.Abstracts;
 using src.Contracts.Dtos;
 using src.Utilities.Abstracts;
 
@@ -14,13 +14,13 @@ namespace src.Utilities;
 public class JwtHelper : IJwtHelper
 {
     private readonly IOptions<AppSettings> _appSettings;
-    private readonly SharedAuthorizedContext _sharedContext;
+    private readonly ISharedAuthorizedContext _sharedContext;
 
     /// <summary>
     /// 建立實例。
     /// </summary>
     public JwtHelper(IOptions<AppSettings> appSettings,
-        SharedAuthorizedContext sharedContext)
+        ISharedAuthorizedContext sharedContext)
     {
         _appSettings = appSettings;
         _sharedContext = sharedContext;

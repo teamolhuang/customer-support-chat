@@ -5,7 +5,7 @@ namespace src.Commands
     /// <summary>
     /// 使用者傳送訊息到 DB。
     /// </summary>
-    public class SendCustomerMessageCommand : IRequest
+    public class SendCustomerMessageNotification : INotification
     {
         /// <summary>
         /// 訊息內容

@@ -38,6 +38,10 @@ namespace src.Contexts.Database.Entities
         /// </summary>
         [ForeignKey(nameof(AccountId))]
         public Account? Account { get; set; }
-        
+
+        /// <summary>
+        /// 此訊息是否來自使用者。
+        /// </summary>
+        public bool IsFromUser { get; set; }
     }
 }

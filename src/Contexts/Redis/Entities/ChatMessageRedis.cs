@@ -14,4 +14,9 @@ public class ChatMessageRedis
     /// 訊息建立時間
     /// </summary>
     public DateTime CreatedTime { get; set; }
+
+    /// <summary>
+    /// 這筆訊息是否來自使用者。
+    /// </summary>
+    public bool IsFromUser { get; set; }
 }

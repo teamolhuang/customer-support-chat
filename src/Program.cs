@@ -27,10 +27,11 @@ builder.Services.AddMediatR(configuration =>
 
 #region Handlers
 
-builder.Services.AddScoped<SendCustomerMessageCommandDbHandler>();
-builder.Services.AddScoped<SendCustomerMessageCommandRedisHandler>();
+builder.Services.AddScoped<SendCustomerMessageNotificationDbHandler>();
+builder.Services.AddScoped<SendCustomerMessageNotificationRedisHandler>();
 builder.Services.AddScoped<RegisterCommandDbHandler>();
 builder.Services.AddScoped<LoginCommandHandler>();
+builder.Services.AddScoped<GetCustomerMessagesCommandHandler>();
 
 #endregion
 

@@ -30,8 +30,31 @@ public class RedisContext : IRedisContext
     }
 
     /// <inheritdoc />
+    public async Task BatchAddToListAsync<T>(string key, IEnumerable<T> inputs)
+    {
+        IEnumerable<RedisValue> jsons = inputs.Select(t => (RedisValue)JsonSerializer.Serialize(t));
+
+        await Database.ListRightPushAsync(key, jsons.ToArray());
+    }
+
+    /// <inheritdoc />
     public async Task ExpireAsync(string key, TimeSpan timeSpan)
     {
         await Database.KeyExpireAsync(key, timeSpan);
+    }
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<T>> QueryListAsync<T>(string key)
+    {
+        RedisValue[] results = await Database.ListRangeAsync(key);
+
+        return results
+            .Select(s => JsonSerializer.Deserialize<T>(s!)!);
+    }
+
+    /// <inheritdoc />
+    public async Task<bool> ContainsKeyAsync(string redisKey)
+    {
+        return await Database.KeyExistsAsync(redisKey);
     }
 }

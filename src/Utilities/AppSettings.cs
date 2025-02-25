@@ -10,6 +10,22 @@ public class AppSettings
     /// JWT 相關的設定。
     /// </summary>
     public virtual JwtSettings Jwt { get; set; } = new();
+
+    /// <summary>
+    /// Redis 相關的設定。
+    /// </summary>
+    public virtual RedisSettings Redis { get; set; } = new();
+}
+
+/// <summary>
+/// Redis 相關的參數設定。
+/// </summary>
+public class RedisSettings
+{
+    /// <summary>
+    /// 使用者聊天訊息表的快取有效時間長度（小時數）。
+    /// </summary>
+    public int ChatMessageExpireHours { get; set; }
 }
 
 /// <summary>
