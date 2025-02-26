@@ -39,7 +39,7 @@ public class JwtHelper : IJwtHelper
         SymmetricSecurityKey securityKey = new(keyBytes);
         
         DateTime issuedAt = DateTime.UtcNow;
-        DateTime expires = issuedAt.AddHours(jwtSettings.ExpirationHour);
+        DateTime expires = issuedAt.AddHours(jwtSettings.ExpirationHours);
         
         string? token = handler.CreateToken(new SecurityTokenDescriptor
         {

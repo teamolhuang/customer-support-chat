@@ -41,5 +41,5 @@ public class JwtSettings
     /// <summary>
     /// 過期小時數
     /// </summary>
-    public int ExpirationHour { get; set; }
+    public int ExpirationHours { get; set; }
 }

@@ -35,7 +35,7 @@ public class CreateTokenTests
             .Returns(new JwtSettings
             {
                 SecretKey = mockSecret,
-                ExpirationHour = mockExpiration
+                ExpirationHours = mockExpiration
             })
             .Verifiable(Times.Once);
         
